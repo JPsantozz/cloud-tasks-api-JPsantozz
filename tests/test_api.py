@@ -33,7 +33,31 @@ def test_mark_done(client):
     result = client.patch(f'/tasks/{item["id"]}', json={"done": True})
     assert result.status_code == 200
     assert client.get("/tasks").json[0]["done"] is True
-
+    
 
 def test_not_found(client):
     assert client.patch("/tasks/999", json={"done": True}).status_code == 404
+
+#mudanças
+def test_get_task_by_id(client):
+    item = client.post("/tasks", json={"title": "Buscar tarefa especifica"}).json
+    result = client.get(f'/tasks/{item["id"]}')
+    assert result.status_code == 200
+    assert result.json["title"] == "Buscar tarefa especifica"
+
+
+def test_get_task_not_found(client):
+    result = client.get("/tasks/999")
+    assert result.status_code == 404
+
+
+def test_delete_task(client):
+    item = client.post("/tasks", json={"title": "Tarefa para apagar"}).json
+    result = client.delete(f'/tasks/{item["id"]}')
+    assert result.status_code == 204
+    assert len(client.get("/tasks").json) == 0
+
+
+def test_delete_not_found(client):
+    result = client.delete("/tasks/999")
+    assert result.status_code == 404
