@@ -68,7 +68,7 @@ def create_app(test_config=None):
             return jsonify(error="tarefa nao encontrada"), 404
         return jsonify(id=task_id, done=data["done"]), 200
     
-#mudanças
+#Mudança
     @app.get("/tasks/<int:task_id>")
     def get_task_by_id(task_id):
             with connect() as db:
